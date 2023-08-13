@@ -1,16 +1,23 @@
 <template>
 	<div class="container">
 		<button @click="isOpen = true">Open modal</button>
-		<modal-wrap :is-open="isOpen" :title="'Main modal'" @closeModal="isOpen = false">
-			<p>modal body content</p>
-			<p>modal body content</p>
-			<p>modal body content</p>
-			<p>modal body content</p>
+		<modal-wrap :is-open="isOpen" :title="'Main modal'" @closeModal="closeModal()">
+			<template v-slot:body>
+				<p>modal body content</p>
+				<p>modal body content</p>
+				<p>modal body content</p>
+				<p>modal body content</p>
+			</template>
+			<template v-slot:footer>
+				<button @click="closeModal()">ok</button>
+			</template>
 		</modal-wrap>
 	</div>
 </template>
 
 <script>
+import { sendToServer } from "./services/api.js";
+
 import ModalWrap from "./components/ModalWrap.vue";
 
 export default {
@@ -28,6 +35,11 @@ export default {
 	methods: {
 		openModal() {
 			this.isOpen = true;
+		},
+
+		closeModal() {
+			sendToServer();
+			this.isOpen = false;
 		},
 	},
 };

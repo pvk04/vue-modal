@@ -3,9 +3,11 @@
 		<div class="modal-content">
 			<h1>{{ title }}</h1>
 			<hr />
-			<slot>empty modal</slot>
+			<slot name="body">empty modal</slot>
 			<hr />
-			<button class="closeBtn">ok</button>
+			<slot name="footer">
+				<button class="closeBtn">ok</button>
+			</slot>
 		</div>
 	</div>
 </template>
@@ -32,7 +34,6 @@ export default {
 
 	methods: {
 		close(event) {
-			console.log(event.target.classList[0] !== "modal-background" && event.target.classList[0] !== "closeBtn");
 			if (event.target.classList[0] !== "modal-background" && event.target.classList[0] !== "closeBtn") return;
 			this.$emit("closeModal");
 		},
