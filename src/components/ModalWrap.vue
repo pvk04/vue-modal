@@ -1,12 +1,12 @@
 <template>
-	<div class="modal-background" :class="{ hide: !isOpen }" @click="close($event)">
-		<div class="modal-content">
+	<div class="modal-background" :class="{ hide: !isOpen }" @click="close()">
+		<div class="modal-content" @click.stop>
 			<h1>{{ title }}</h1>
 			<hr />
 			<slot name="body">empty modal</slot>
 			<hr />
-			<slot name="footer">
-				<button class="closeBtn">ok</button>
+			<slot name="footer" :close="close" :confirm="confirm">
+				<button @click="confirm()">ok</button>
 			</slot>
 		</div>
 	</div>
@@ -29,13 +29,29 @@ export default {
 	},
 
 	emits: {
-		closeModal: true,
+		closeModal: null,
+		confirm: null,
+	},
+
+	mounted() {
+		document.addEventListener("keydown", this.handleKeyDown);
+	},
+
+	beforeUnmount() {
+		document.removeEventListener("keydown", this.handleKeyDown);
 	},
 
 	methods: {
-		close(event) {
-			if (event.target.classList[0] !== "modal-background" && event.target.classList[0] !== "closeBtn") return;
+		close() {
 			this.$emit("closeModal");
+		},
+
+		confirm() {
+			this.$emit("confirm");
+		},
+
+		handleKeyDown(event) {
+			if (this.isOpen && event.key === "Escape") this.close();
 		},
 	},
 };

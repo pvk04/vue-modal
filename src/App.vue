@@ -8,16 +8,17 @@
 				isOpen = false;
 				controlValue = '';
 			"
+			@confirm="confirmModal()"
 		>
-			<template v-slot:body>
+			<template #body>
 				<p>modal body content</p>
 				<p>modal body content</p>
 				<p>modal body content</p>
 				<p>modal body content</p>
 			</template>
-			<template v-slot:footer>
-				<input type="text" :placeholder="controlPhraze" v-model="controlValue" />
-				<button @click="closeModal()" :disabled="controlValue !== controlPhraze">ok</button>
+			<template #footer="{ confirm }">
+				<input type="text" :placeholder="$options.CONFIRMATION_TEXT" v-model="controlValue" />
+				<button @click="confirm" :disabled="!isConfirmationCorrect">ok</button>
 			</template>
 		</modal-wrap>
 	</div>
@@ -37,20 +38,27 @@ export default {
 	data() {
 		return {
 			isOpen: false,
-			controlPhraze: "I understand",
 			controlValue: "",
 		};
 	},
 
+	CONFIRMATION_TEXT: "I understand",
+
+	computed: {
+		isConfirmationCorrect() {
+			return this.controlValue === this.$options.CONFIRMATION_TEXT;
+		},
+	},
+
 	methods: {
 		openModal() {
+			this.controlValue = "";
 			this.isOpen = true;
 		},
 
-		closeModal() {
+		confirmModal() {
 			sendToServer();
 			this.isOpen = false;
-			this.controlValue = "";
 		},
 	},
 };
