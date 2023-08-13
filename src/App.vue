@@ -1,7 +1,14 @@
 <template>
 	<div class="container">
 		<button @click="isOpen = true">Open modal</button>
-		<modal-wrap :is-open="isOpen" :title="'Main modal'" @closeModal="closeModal()">
+		<modal-wrap
+			:is-open="isOpen"
+			:title="'Main modal'"
+			@closeModal="
+				isOpen = false;
+				controlValue = '';
+			"
+		>
 			<template v-slot:body>
 				<p>modal body content</p>
 				<p>modal body content</p>
@@ -9,7 +16,8 @@
 				<p>modal body content</p>
 			</template>
 			<template v-slot:footer>
-				<button @click="closeModal()">ok</button>
+				<input type="text" :placeholder="controlPhraze" v-model="controlValue" />
+				<button @click="closeModal()" :disabled="controlValue !== controlPhraze">ok</button>
 			</template>
 		</modal-wrap>
 	</div>
@@ -29,6 +37,8 @@ export default {
 	data() {
 		return {
 			isOpen: false,
+			controlPhraze: "I understand",
+			controlValue: "",
 		};
 	},
 
@@ -40,6 +50,7 @@ export default {
 		closeModal() {
 			sendToServer();
 			this.isOpen = false;
+			this.controlValue = "";
 		},
 	},
 };
